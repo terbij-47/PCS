@@ -1,6 +1,5 @@
 import random as random
 
-
 class Vec3:
 
     @classmethod
@@ -240,3 +239,12 @@ class Vec3:
             (tuple) кортеж, состоящий из компонент вектора.
         """
         return self.x, self.y, self.z
+
+    def copy(self):
+        """
+        Копирование вектора.
+        Аргументы: нет.
+        Выходные данные:
+            (Vec3) новый вектор, но с теми же координатами.
+        """
+        return Vec3(self.x, self.y, self.z)

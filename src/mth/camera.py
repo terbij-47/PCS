@@ -1,4 +1,4 @@
-from matr4 import Matr4, Vec3
+from src.mth.matr4 import Matr4, Vec3
 
 class Camera:
     def __init__(self, loc = Vec3(0, 0, 10), up = Vec3(0, 1, 0), right = Vec3(1, 0, 0),

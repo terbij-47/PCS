@@ -1,5 +1,5 @@
-from vec3 import Vec3
-from mth import D2R, math
+from src.mth.vec3 import Vec3
+from src.mth.mth import D2R, math
 
 class Matr4:
     """
@@ -421,3 +421,15 @@ class Matr4:
                 self.A[1][0], self.A[1][1], self.A[1][2], self.A[1][3],
                 self.A[2][0], self.A[2][1], self.A[2][2], self.A[2][3],
                 self.A[3][0], self.A[3][1], self.A[3][2], self.A[3][3]]
+
+    def copy(self):
+        """
+        Копирование матрицы.
+        Аргументы: нет.
+        Выходные данные:
+            (Matr4) новая матрица, но с теми же компонентами.
+        """
+        return Matr4(self.A[0][0], self.A[0][1], self.A[0][2], self.A[0][3],
+                self.A[1][0], self.A[1][1], self.A[1][2], self.A[1][3],
+                self.A[2][0], self.A[2][1], self.A[2][2], self.A[2][3],
+                self.A[3][0], self.A[3][1], self.A[3][2], self.A[3][3])

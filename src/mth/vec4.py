@@ -213,3 +213,12 @@ class Vec4:
             (tuple) кортеж, состоящий из компонент вектора.
         """
         return self.x, self.y, self.z, self.w
+
+    def copy(self):
+        """
+        Копирование вектора.
+        Аргументы: нет.
+        Выходные данные:
+            (Vec4) новый вектор, но с теми же координатами.
+        """
+        return Vec4(self.x, self.y, self.z, self.w)
