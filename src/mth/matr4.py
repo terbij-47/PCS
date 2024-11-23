@@ -7,10 +7,10 @@ class Matr4:
     Это значит, что вектор умножается на матрицу. Не наоборот.
     """
 
-    @classmethod
-    def matr_determ_3x3(cls, a00 : float, a01 : float, a02 : float,
-                             a10 : float, a11 : float, a12 : float,
-                             a20 : float, a21 : float, a22 : float) -> float:
+    @staticmethod
+    def matr_determ_3x3( a00 : float, a01 : float, a02 : float,
+                            a10 : float, a11 : float, a12 : float,
+                            a20 : float, a21 : float, a22 : float) -> float:
         """
         Вычисление определителя матрицы 3х3.
         Аргументы:
@@ -22,8 +22,8 @@ class Matr4:
         return a00 * a11 * a22 + a01 * a12 * a20 + a02 * a10 * a21 - \
                a00 * a12 * a21 - a01 * a10 * a22 - a02 * a11 * a20
 
-    @classmethod
-    def rotate(cls, angle_in_degrees : float, vector : Vec3):
+    @staticmethod
+    def rotate(angle_in_degrees : float, vector : Vec3) -> 'Matr4':
         """
         Матрица поворота вокруг оси на заданный угол против часовой стрелки.
         Аргументы:
@@ -47,8 +47,8 @@ class Matr4:
                 0,                               0,                               0,                               1)
 
 
-    @classmethod
-    def rotateX(cls, angle_in_degree : float):
+    @staticmethod
+    def rotateX(angle_in_degree : float) -> 'Matr4':
         """
         Матрица поворота вокруг оси ОХ на заданный угол против часовой стрелки.
         Аргументы:
@@ -66,8 +66,8 @@ class Matr4:
                            0, -s, c, 0,
                            0,  0, 0, 1)
 
-    @classmethod
-    def rotateY(cls, angle_in_degree : float):
+    @staticmethod
+    def rotateY(angle_in_degree : float) -> 'Matr4':
         """
         Матрица поворота вокруг оси OY на заданный угол против часовой стрелки.
         Аргументы:
@@ -86,8 +86,8 @@ class Matr4:
                            0, 0,  0, 1)
 
 
-    @classmethod
-    def rotateZ(cls, angle_in_degree : float):
+    @staticmethod
+    def rotateZ(angle_in_degree : float) -> 'Matr4':
         """
         Матрица поворота вокруг оси OZ на заданный угол против часовой стрелки.
         Аргументы:
@@ -105,8 +105,8 @@ class Matr4:
                             0, 0, 1, 0,
                             0, 0, 0, 1)
 
-    @classmethod
-    def scale(cls, v : Vec3):
+    @staticmethod
+    def scale(v : Vec3) -> 'Matr4':
         """
         Матрица масштабирования.
         Аргументы:
@@ -120,8 +120,8 @@ class Matr4:
                              0,   0, v.z, 0,
                              0,   0,   0, 1)
 
-    @classmethod
-    def translate(cls, v : Vec3):
+    @staticmethod
+    def translate(v : Vec3) -> 'Matr4':
         """
         Матрица параллельного переноса.
         Аргументы:
@@ -135,8 +135,8 @@ class Matr4:
                            0,   0,   1, 0,
                          v.x, v.y, v.z, 1)
 
-    @classmethod
-    def ortho(cls, left : float, right : float, bottom : float, top : float, near : float, far : float):
+    @staticmethod
+    def ortho(left : float, right : float, bottom : float, top : float, near : float, far : float) -> 'Matr4':
         """
         Матрица ортогональной проекции.
         Аргументы:
@@ -155,8 +155,8 @@ class Matr4:
                 0,                                 0,                                 -2 / (far - near),            0,
                 -(right + left) / (right - left),  -(top + bottom) / (top - bottom),  -(far + near) / (far - near), 1)
 
-    @classmethod
-    def frustum(cls, left : float, right : float, bottom : float, top : float, near : float, far : float):
+    @staticmethod
+    def frustum(left : float, right : float, bottom : float, top : float, near : float, far : float) -> 'Matr4':
         """
         Матрица центральной проекции.
         Аргументы:
@@ -181,8 +181,8 @@ class Matr4:
                 (r + l) / (r - l), (t + b) / (t - b), -(f + n) / (f - n),  -1,
                 0,                 0,                 -2 * n * f / (f - n), 0)
 
-    @classmethod
-    def view(cls, loc, at, up):
+    @staticmethod
+    def view(loc : Vec3, at : Vec3, up : Vec3) -> 'Matr4':
         """
         Матрица, которая задает обзор (не знаю, как иначе это написать).
         Аргументы:
@@ -199,20 +199,18 @@ class Matr4:
         right = ~(dir_ % up)
         tup = ~(right % dir_)
         return Matr4(
-            right.x,        tup.x,        -dir_.X,      0,
-                  right.y,        tup.y,        -dir_.Y,      0,
-                  right.z,        tup.z,        -dir_.Z,      0,
+            right.x,        tup.x,        -dir_.x,      0,
+                  right.y,        tup.y,        -dir_.y,      0,
+                  right.z,        tup.z,        -dir_.z,      0,
                   -(loc * right), -(loc * tup), (loc * dir_), 1)
 
-    def __init__(self, *args):
+    def __init__(self, *args) -> None:
         """
         Создание матрицы 4х4.
         Аргументы:
             - нет.
             - список из 16 компонент матрицы: (list) *args;
-        Выходные данные:
-            (Matr4) единичная матрица.
-            (Matr4) матрица, состоящая из заданных компонент.
+        Выходные данные: нет
         """
         if len(args) == 0:
             self.A = [
@@ -228,8 +226,9 @@ class Matr4:
                 [args[8], args[9], args[10], args[11]],
                 [args[12], args[13], args[14], args[15]]
             ]
+        self.__inv = None
 
-    def __mul__(self, other):
+    def __mul__(self, other : 'Matr4') -> 'Matr4':
         """
         Умножение матриц.
         Аргументы:
@@ -273,13 +272,16 @@ class Matr4:
                                                 self.A[2][0], self.A[2][1], self.A[2][2],
                                                 self.A[3][0], self.A[3][1], self.A[3][2])
 
-    def inverse(self):
+    def inverse(self) -> 'Matr4':
         """
         Нахождение обратной матрицы.
         Аргументы: нет.
         Выходные данные:
             (Matr4) обратная матрица.
         """
+        if self.__inv:
+            return Matr4(*self.__inv)
+
         det = ~self
 
         r = Matr4()
@@ -353,10 +355,11 @@ class Matr4:
           +Matr4.matr_determ_3x3(self.A[0][0], self.A[0][1], self.A[0][2],
                                  self.A[1][0], self.A[1][1], self.A[1][2],
                                  self.A[2][0], self.A[2][1], self.A[2][2]) / det
+        self.__inv = r.to_list()
         return r
 
 
-    def transpose(self):
+    def transpose(self) -> 'Matr4':
         """
         Транспонирование матрицы
         Аргументы: нет.
@@ -368,7 +371,7 @@ class Matr4:
                            self.A[0][2], self.A[1][2], self.A[2][2], self.A[3][2],
                            self.A[0][3], self.A[1][3], self.A[2][3], self.A[3][3])
 
-    def transform_hc(self, v : Vec3):
+    def transform_hc(self, v : Vec3) -> Vec3:
         """
         Умножение вектора на матрицу с приведением вектора к гомогенным координатам
         Аргументы:
@@ -384,7 +387,7 @@ class Matr4:
                     (v.x * self.A[0][2] + v.y * self.A[1][2] + v.z * self.A[2][2] + self.A[3][2]) / w)
 
 
-    def transform_normal(self, v : Vec3):
+    def transform_normal(self, v : Vec3) -> Vec3:
         """
         Преобразование вектора нормали. (точки объекта меняются по прямой матрице, а нормали - по обратной)
         Аргументы:
@@ -398,19 +401,19 @@ class Matr4:
                     v.x * t.A[1][0] + v.y * t.A[1][1] + v.z * t.A[1][2],
                     v.x * t.A[2][0] + v.y * t.A[2][1] + v.z * t.A[2][2])
 
-    def to_tuple(self):
+    def to_tuple(self) -> tuple:
         """
         Запись компонент матрицы в виде кортежа.
         Аргументы: нет.
         Выходные данные:
-            (list) кортеж, состоящий из компонент матрицы.
+            (tuple) кортеж, состоящий из компонент матрицы.
         """
         return self.A[0][0], self.A[0][1], self.A[0][2], self.A[0][3], \
                self.A[1][0], self.A[1][1], self.A[1][2], self.A[1][3], \
                self.A[2][0], self.A[2][1], self.A[2][2], self.A[2][3], \
                self.A[3][0], self.A[3][1], self.A[3][2], self.A[3][3]
 
-    def to_list(self):
+    def to_list(self) -> list:
         """
         Запись компонент матрицы в виде списка.
         Аргументы: нет.
@@ -422,7 +425,7 @@ class Matr4:
                 self.A[2][0], self.A[2][1], self.A[2][2], self.A[2][3],
                 self.A[3][0], self.A[3][1], self.A[3][2], self.A[3][3]]
 
-    def copy(self):
+    def copy(self) -> 'Matr4':
         """
         Копирование матрицы.
         Аргументы: нет.

@@ -13,7 +13,7 @@ class Vec2:
         return Vec2(random.random(), random.random())
 
 
-    def __init__(self, x : float = 0, y : float = 0):
+    def __init__(self, x : float = 0, y : float = 0) -> None:
         """
         Создание двухкомпонентного вектора.
         Аргументы:
@@ -32,7 +32,7 @@ class Vec2:
         """
         return (self.x ** 2 + self.y ** 2) ** 0.5
 
-    def __add__(self, other):
+    def __add__(self, other : 'Vec2') -> 'Vec2':
         """
         Нахождение суммы векторов.
         Аргументы:
@@ -44,7 +44,7 @@ class Vec2:
         return Vec2(self.x + other.x,
                     self.y + other.y)
 
-    def __sub__(self, other):
+    def __sub__(self, other : 'Vec2') -> 'Vec2':
         """
         Нахождение разности векторов.
         Аргументы:
@@ -61,7 +61,7 @@ class Vec2:
         Умножение вектора на другой математический объект.
         Аргументы:
             - второй вектор: (Vec2) other;
-            - число: (float) other;
+            - число: (float | int) other;
         Выходные данные:
             (float) скалярное произведение векторов.
             (Vec2) вектор, умноженный на заданное число.
@@ -70,10 +70,9 @@ class Vec2:
             return Vec2(self.x * other, self.y * other)
         if type(other) == Vec2:
             return self.x * other.x + self.y * other.y
-        return None
+        raise TypeError(f'Cannot multiply 2d vector with {type(other)}')
 
-
-    def __invert__(self):
+    def __invert__(self) -> 'Vec2':
         """
         Нахождение нормированного вектора. Сам вектор не изменяется.
         Аргументы: нет.
@@ -85,7 +84,7 @@ class Vec2:
             return self
         return self / l
 
-    def norm_self(self):
+    def norm_self(self) -> 'Vec2':
         """
         Нормирование вектора.
         Аргументы: нет.
@@ -99,7 +98,7 @@ class Vec2:
         self.y /= l
         return self
 
-    def __truediv__(self, other):
+    def __truediv__(self, other : float) -> 'Vec2':
         """
         Деление вектора на число.
         Аргументы:
@@ -110,7 +109,7 @@ class Vec2:
         """
         return Vec2(self.x / other, self.y / other)
 
-    def __neg__(self):
+    def __neg__(self) -> 'Vec2':
         """
         Умножение вектора на -1. Сам вектор не меняется
         Аргументы: нет.
@@ -119,53 +118,66 @@ class Vec2:
         """
         return Vec2(-self.x, -self.y)
 
-    def __iadd__(self, other):
+    def __iadd__(self, other : 'Vec2') -> 'Vec2':
         """
         Прибавление вектора к данному.
         Аргументы:
             - второй вектор:
                 (Vec2) other;
-        Выходные данные: нет.
+        Выходные данные:
+            (Vec2) результирующий вектор.
         """
         self.x += other.x
         self.y += other.y
         return self
 
-    def __isub__(self, other):
+    def __isub__(self, other : 'Vec2') -> 'Vec2':
         """
         Вычитание вектора из текущего.
         Аргументы:
             - второй вектор:
                 (Vec2) other;
-        Выходные данные: нет.
+        Выходные данные:
+            (Vec2) результирующий вектор.
         """
         self.x -= other.x
         self.y -= other.y
         return self
 
-    def __itruediv__(self, other = float):
+    def __itruediv__(self, other = float) -> 'Vec2':
         """
         Деление вектора на число.
         Аргументы:
             - число:
                 (float) other;
-        Выходные данные: нет.
+        Выходные данные:
+            (Vec2) результирующий вектор.
         """
         self.x /= other
         self.y /= other
         return self
 
-    def __imul__(self, other = float):
+    def __imul__(self, other = float) -> 'Vec2':
         """
-        Домножение вектора на число.
+        Умножение вектора на число.
         Аргументы:
             - число:
                 (float) other;
-        Выходные данные: нет.
+        Выходные данные:
+            (Vec2) результирующий вектор.
         """
         self.x *= other
         self.y *= other
         return self
+
+    def __str__(self) -> str:
+        """
+        Строковое представление вектора.
+        Аргументы: нет.
+        Выходные данные:
+             (str) строка, содержащая компоненты вектора.
+       """
+        return f'x: {self.x}, y: {self.y}'
 
     def to_list(self) -> list:
         """
@@ -185,7 +197,7 @@ class Vec2:
         """
         return self.x, self.y
 
-    def copy(self):
+    def copy(self) -> 'Vec2':
         """
         Копирование вектора.
         Аргументы: нет.

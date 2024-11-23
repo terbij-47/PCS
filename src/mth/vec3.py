@@ -2,8 +2,8 @@ import random as random
 
 class Vec3:
 
-    @classmethod
-    def rnd(cls):
+    @staticmethod
+    def rnd() -> 'Vec3':
         """
         Создание вектора с произвольными компонентами в пределах [0, 1).
         Аргументы: нет.
@@ -12,8 +12,8 @@ class Vec3:
         """
         return Vec3(random.random(), random.random(), random.random())
 
-    @classmethod
-    def dist(cls, v1, v2) -> float:
+    @staticmethod
+    def dist(v1 : 'Vec3', v2 : 'Vec3') -> float:
         """
         Нахождение расстояния между точками.
         Аргументы:
@@ -24,7 +24,7 @@ class Vec3:
         """
         return (v1 - v2).len()
 
-    def __init__( self, x : float = 0, y : float = 0, z : float = 0 ):
+    def __init__( self, x : float = 0, y : float = 0, z : float = 0 ) -> None:
         """
         Создание трехкомпонентного вектора.
         Аргументы:
@@ -44,7 +44,7 @@ class Vec3:
         """
         return (self.x ** 2 + self.y ** 2 + self.z ** 2) ** 0.5
 
-    def __add__(self, other):
+    def __add__(self, other : 'Vec3') -> 'Vec3':
         """
         Сложение двух векторов.
         Аргументы:
@@ -57,7 +57,7 @@ class Vec3:
                     self.y + other.y,
                     self.z + other.z)
 
-    def __sub__(self, other):
+    def __sub__(self, other : 'Vec3') -> 'Vec3':
         """
         Вычитание двух векторов.
         Аргументы:
@@ -83,7 +83,6 @@ class Vec3:
             (Vec3) результат умножения соответствующего четырехкомпонентного вектора на матрицу.
                 Используется нотация вектор-строка
         """
-
         if type(other) == float or type(other) == int:
             return Vec3(self.x * other, self.y * other, self.z * other)
         if type(other) == Vec3:
@@ -92,9 +91,9 @@ class Vec3:
             return Vec3(self.x * other.A[0][0] + self.y * other.A[1][0] + self.z * other.A[2][0] + other.A[3][0],
                         self.x * other.A[0][1] + self.y * other.A[1][1] + self.z * other.A[2][1] + other.A[3][1],
                         self.x * other.A[0][2] + self.y * other.A[1][2] + self.z * other.A[2][2] + other.A[3][2])
-        return None
+        raise TypeError(f'Cannot multiply 3d vector with {type(other)}')
 
-    def __and__(self, other):
+    def __and__(self, other : 'Matr4') -> 'Vec3':
         """
         Умножение вектора на матрицу 3х3.
         Аргументы:
@@ -110,7 +109,7 @@ class Vec3:
 
 
 
-    def __mod__(self, other):
+    def __mod__(self, other : 'Vec3') -> 'Vec3':
         """
         Вычисление векторного произведения векторов.
         Аргументы:
@@ -123,7 +122,7 @@ class Vec3:
                     self.z * other.x - self.x * other.z,
                     self.x * other.y - self.y * other.x)
 
-    def __invert__(self):
+    def __invert__(self) -> 'Vec3':
         """
         Получение нормированного вектора. Сам вектор не изменяется
         Аргументы: нет.
@@ -135,7 +134,7 @@ class Vec3:
             return self
         return self / l
 
-    def norm_self(self):
+    def norm_self(self) -> 'Vec3':
         """
         Нормирование вектора. Изменяет данный вектор
         Аргументы: нет.
@@ -150,7 +149,7 @@ class Vec3:
         self.z /= l
         return self
 
-    def __truediv__(self, other : float):
+    def __truediv__(self, other : float) -> 'Vec3':
         """
         Деление вектора на число.
         Аргументы:
@@ -161,7 +160,7 @@ class Vec3:
         """
         return Vec3(self.x / other, self.y / other, self.z / other)
 
-    def __neg__(self):
+    def __neg__(self) -> 'Vec3':
         """
         Умножение вектора на -1. Сам вектор не меняется
         Аргументы: нет.
@@ -170,59 +169,72 @@ class Vec3:
         """
         return Vec3(-self.x, -self.y, -self.z)
 
-    def __iadd__(self, other):
+    def __iadd__(self, other : 'Vec3') -> 'Vec3':
         """
         Прибавление вектора к данному.
         Аргументы:
             - второй вектор:
                 (Vec3) other;
-        Выходные данные: нет.
+        Выходные данные:
+            (Vec3) результирующий вектор.
         """
         self.x += other.x
         self.y += other.y
         self.z += other.z
         return self
 
-    def __isub__(self, other):
+    def __isub__(self, other : 'Vec3') -> 'Vec3':
         """
         Вычитание вектора из текущего.
         Аргументы:
             - второй вектор:
                 (Vec3) other;
-        Выходные данные: нет.
+        Выходные данные:
+            (Vec3) результирующий вектор.
         """
         self.x -= other.x
         self.y -= other.y
         self.z -= other.z
         return self
 
-    def __itruediv__(self, other = float):
+    def __itruediv__(self, other = float) -> 'Vec3':
         """
         Деление вектора на число.
         Аргументы:
             - число:
                 (float) other;
-        Выходные данные: нет.
+        Выходные данные:
+            (Vec3) результирующий вектор.
         """
         self.x /= other
         self.y /= other
         self.z /= other
         return self
 
-    def __imul__(self, other = float):
+    def __imul__(self, other = float) -> 'Vec3':
         """
-        Домножение вектора на число.
+        Умножение вектора на число.
         Аргументы:
             - число:
                 (float) other;
-        Выходные данные: нет.
-        """
+        Выходные данные:
+             (Vec3) результирующий вектор.
+       """
         self.x *= other
         self.y *= other
         self.z *= other
         return self
 
-    def to_list(self):
+    def __str__(self) -> str:
+        """
+        Строковое представление вектора.
+        Аргументы: нет.
+        Выходные данные:
+             (str) строка, содержащая компоненты вектора.
+       """
+        return f'x: {self.x}, y: {self.y}, z: {self.z}'
+
+    def to_list(self) -> list:
         """
         Запись компонент вектора в виде списка.
         Аргументы: нет.
@@ -231,7 +243,7 @@ class Vec3:
         """
         return [self.x, self.y, self.z]
 
-    def to_tuple(self):
+    def to_tuple(self) -> tuple:
         """
         Запись компонент вектора в виде кортежа.
         Аргументы: нет.
@@ -240,7 +252,7 @@ class Vec3:
         """
         return self.x, self.y, self.z
 
-    def copy(self):
+    def copy(self) -> 'Vec3':
         """
         Копирование вектора.
         Аргументы: нет.

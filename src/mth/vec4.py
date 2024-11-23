@@ -3,8 +3,8 @@ import random as random
 
 class Vec4:
 
-    @classmethod
-    def rnd(cls):
+    @staticmethod
+    def rnd() -> 'Vec4':
         """
         Создание вектора с произвольными компонентами в пределах [0, 1).
         Аргументы: нет.
@@ -13,8 +13,8 @@ class Vec4:
         """
         return Vec4(random.random(), random.random(), random.random(), random.random())
 
-    @classmethod
-    def dist(cls, v1, v2) -> float:
+    @staticmethod
+    def dist(v1, v2) -> float:
         """
         Нахождение расстояния между точками.
         Аргументы:
@@ -25,7 +25,7 @@ class Vec4:
         """
         return (v1 - v2).len()
 
-    def __init__( self, x : float = 0, y : float = 0, z : float = 0, w : float = 0 ):
+    def __init__( self, x : float = 0, y : float = 0, z : float = 0, w : float = 0 ) -> None:
         """
         Создание четырехкомпонентного вектора.
         Аргументы:
@@ -46,7 +46,7 @@ class Vec4:
         """
         return (self.x ** 2 + self.y ** 2 + self.z ** 2 + self.w ** 2) ** 0.5
 
-    def __add__(self, other):
+    def __add__(self, other : 'Vec4') -> 'Vec4':
         """
         Сложение двух векторов.
         Аргументы:
@@ -60,7 +60,7 @@ class Vec4:
                     self.z + other.z,
                     self.w + other.w)
 
-    def __sub__(self, other):
+    def __sub__(self, other : 'Vec4') -> 'Vec4':
         """
         Вычитание двух векторов.
         Аргументы:
@@ -89,10 +89,10 @@ class Vec4:
             return Vec4(self.x * other, self.y * other, self.z * other, self.w * other)
         if type(other) == Vec4:
             return self.x * other.x + self.y * other.y + self.z * other.z + self.w * other.w
-        return None
+        raise TypeError(f'Cannot multiply 4d vector with {type(other)}')
 
 
-    def __invert__(self):
+    def __invert__(self) -> 'Vec4':
         """
         Получение нормированного вектора. Сам вектор не изменяется
         Аргументы: нет.
@@ -104,7 +104,7 @@ class Vec4:
             return self
         return self / l
 
-    def norm_self(self):
+    def norm_self(self) -> 'Vec4':
         """
         Нормирование вектора. Изменяет данный вектор
         Аргументы: нет.
@@ -120,7 +120,7 @@ class Vec4:
         self.w /= l
         return self
 
-    def __truediv__(self, other : float):
+    def __truediv__(self, other : float) -> 'Vec4':
         """
         Деление вектора на число.
         Аргументы:
@@ -131,7 +131,7 @@ class Vec4:
         """
         return Vec4(self.x / other, self.y / other, self.z / other, self.w / other)
 
-    def __neg__(self):
+    def __neg__(self) -> 'Vec4':
         """
         Умножение вектора на -1. Сам вектор не меняется
         Аргументы: нет.
@@ -140,13 +140,14 @@ class Vec4:
         """
         return Vec4(-self.x, -self.y, -self.z, -self.w)
 
-    def __iadd__(self, other):
+    def __iadd__(self, other : 'Vec4') -> 'Vec4':
         """
         Прибавление вектора к данному.
         Аргументы:
             - второй вектор:
                 (Vec4) other;
-        Выходные данные: нет.
+        Выходные данные:
+            (Vec4) результирующий вектор.
         """
         self.x += other.x
         self.y += other.y
@@ -154,13 +155,14 @@ class Vec4:
         self.w += other.w
         return self
 
-    def __isub__(self, other):
+    def __isub__(self, other : 'Vec4') -> 'Vec4':
         """
         Вычитание вектора из текущего.
         Аргументы:
             - второй вектор:
                 (Vec4) other;
-        Выходные данные: нет.
+        Выходные данные:
+            (Vec4) результирующий вектор.
         """
         self.x -= other.x
         self.y -= other.y
@@ -168,13 +170,14 @@ class Vec4:
         self.w -= other.w
         return self
 
-    def __itruediv__(self, other = float):
+    def __itruediv__(self, other = float) -> 'Vec4':
         """
         Деление вектора на число.
         Аргументы:
             - число:
                 (float) other;
-        Выходные данные: нет.
+        Выходные данные:
+            (Vec4) результирующий вектор.
         """
         self.x /= other
         self.y /= other
@@ -182,13 +185,14 @@ class Vec4:
         self.w /= other
         return self
 
-    def __imul__(self, other = float):
+    def __imul__(self, other = float) -> 'Vec4':
         """
-        Домножение вектора на число.
+        Умножение вектора на число.
         Аргументы:
             - число:
                 (float) other;
-        Выходные данные: нет.
+        Выходные данные:
+            (Vec4) результирующий вектор.
         """
         self.x *= other
         self.y *= other
@@ -196,7 +200,16 @@ class Vec4:
         self.w *= other
         return self
 
-    def to_list(self):
+    def __str__(self) -> str:
+        """
+        Строковое представление вектора.
+        Аргументы: нет.
+        Выходные данные:
+             (str) строка, содержащая компоненты вектора.
+       """
+        return f'x: {self.x}, y: {self.y}, z: {self.z}, w: {self.w}'
+
+    def to_list(self) -> list:
         """
         Запись компонент вектора в виде списка.
         Аргументы: нет.
@@ -205,7 +218,7 @@ class Vec4:
         """
         return [self.x, self.y, self.z, self.w]
 
-    def to_tuple(self):
+    def to_tuple(self) -> tuple:
         """
         Запись компонент вектора в виде кортежа.
         Аргументы: нет.
@@ -214,7 +227,7 @@ class Vec4:
         """
         return self.x, self.y, self.z, self.w
 
-    def copy(self):
+    def copy(self) -> 'Vec4':
         """
         Копирование вектора.
         Аргументы: нет.

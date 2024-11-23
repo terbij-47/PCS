@@ -1,18 +1,19 @@
 ﻿from src.system import System
 
-stm = System(1000, 800)
+stm = System(1000, 1000)
 # Специальные сочетания клавиш:
 # 'ctrl' + 'p' -> поставить все на паузу / убрать паузу
+# 'ctrl' + 'w' -> включить / выключить wireframe
 # 'ctrl' + 'f' -> переход на фиксированное fps = 60. Использовать в том случае,
 #           когда время между кадрами слишком большое, что не позволяет корректно обновить что-либо
 
+import units.camera_unit as cam
+stm.create_unit("camera control unit", cam.camera_control)
 
-import units.input_test as uit
-# Что можно делать:
-# прокрутка колесика -> изменение радиуса кругов
-# стрелки вверх / вниз -> увеличение / уменьшение радиуса траектории
-# лкм + перемещение мышки -> перемещение центра траектории
-stm.create_unit('input_test', uit.test_input_unit)
+import units.render_test as urt
+stm.create_unit('render test', urt.test_render_unit)
 
+import units.cloth_unit as cloth
+stm.create_unit('cloth unit', cloth.cloth_unit)
 
 stm.run()

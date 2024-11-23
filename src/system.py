@@ -1,4 +1,5 @@
 from units.unit_base import UnitBase
+from src.render.rnd import Render
 import pygame
 import os
 import sys
@@ -17,7 +18,7 @@ class Keyboard:
     Доступны текущие состояния клавиш и параметр, показывающий, была ли клавиша однократно нажата
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Установка начальных значений всех состояний
         Аргументы: нет.
@@ -38,7 +39,7 @@ class Keyboard:
         self.keys_click['left'] = self.keys_click['right'] = self.keys_click['up'] = self.keys_click['down'] = False
 
 
-    def _set_key(self, key : int, value : bool):
+    def _set_key(self, key : int, value : bool) -> None:
         """
         Изменение состояния клавиши по коду символа:
         Аргументы:
@@ -63,7 +64,7 @@ class Keyboard:
         elif key == pygame.K_DOWN:
             self.keys['down'] = value
 
-    def _check_clicks(self):
+    def _check_clicks(self) -> None:
         """
         Проверка однократного нажатия клавиш. Должна вызываться один раз за кадр:
         Аргументы: нет.
@@ -86,7 +87,7 @@ class Mouse:
                      - флаг нажатия колёсика мыши;
     Доступны все перечисленные параметры
     """
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Установка начальных значений всех параметров
         Аргументы: нет.
@@ -99,7 +100,7 @@ class Mouse:
         self.is_left_button_pressed = False
         self.is_wheel_pressed = False
 
-    def _set_wheel(self, wheel_delta : int ):
+    def _set_wheel(self, wheel_delta : int) -> None:
         """
         Обновление параметров колеса.
         Аргументы:
@@ -110,14 +111,14 @@ class Mouse:
         self.wheel_delta = wheel_delta
         self.wheel_pos += wheel_delta
 
-    def _set_cursor(self, cursor_position : tuple, offset : tuple = (0, 0)):
+    def _set_cursor(self, cursor_position : tuple[int], offset : tuple[int] = (0, 0)) -> None:
         """
         Обновление позиции курсора.
         Аргументы:
             - текущее положение курсора в пикселях в формате (x, y). Отсчет начинается от верхнего левого угла окна:
-                 (tuple) cursor_position;
+                 (tuple[int]) cursor_position;
             - относительное перемещение курсора за кадр в пикселях:
-                (tuple) offset;
+                (tuple[int]) offset;
         Выходные параметры: нет.
         """
         self.cursor_pos.x = cursor_position[0]
@@ -125,12 +126,17 @@ class Mouse:
         self.cursor_delta_pos.x = offset[0]
         self.cursor_delta_pos.y = offset[1]
 
-    def _reset_deltas(self):
+    def _reset_deltas(self) -> None:
+        """
+        Сброс значений относительных изменений за кадр.
+        Аргументы: нет.
+        Выходные данные: нет.
+        """
         self.wheel_delta = 0
         self.cursor_delta_pos.x = 0
         self.cursor_delta_pos.y = 0
 
-    def _set_buttons(self, button : int, value : bool):
+    def _set_buttons(self, button : int, value : bool) -> None:
         """
         Изменение состояний нажатия кнопок мышки.
         Аргументы:
@@ -138,7 +144,7 @@ class Mouse:
                  (int) button;
             - значение, которое требуется установить:
                 (bool) value;
-        Выходные параметры: нет.
+        Выходные данные: нет.
         """
         if button == 1:
             self.is_left_button_pressed = value
@@ -158,7 +164,7 @@ class Timer:
         - промежуток времени между кадрами
         - количество кадров в секунду
     """
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Определение всех параметров и их начальных значений.
         Аргументы: нет.
@@ -178,7 +184,7 @@ class Timer:
         self.__delay_start = 0
         self.__flag = 1
 
-    def _update(self):
+    def _update(self) -> None:
         """
         Обновление всех указанных параметров времени. Функция должна вызываться одни раз за кадр.
         Аргументы: нет.
@@ -198,20 +204,21 @@ class Timer:
                 self.__flag = 1
             self.time = pygame.time.get_ticks() - self.__delay
             self.fps, self.delta_time = ((60, 100 / 6) if self.is_fps_fixed else (self.real_fps, self.__real_delta_time))
+            self.time = (self.time + self.delta_time - self.__delay if self.is_fps_fixed else (pygame.time.get_ticks() - self.__delay))
 
         # Во время перетаскивания окна обработка сообщений не работает,
         # поэтому пытаемся отследить этот момент через разницу во времени между кадрами.
         # Это надо убрать при fps меньше 10!
-        if self.__real_delta_time > 100:
-            self.__delay += self.__real_delta_time
-            self.delta_time = 2
-            self.fps = 1 / 0.002
+        # if self.__real_delta_time > 100:
+        #     self.__delay += self.__real_delta_time
+        #     self.delta_time = 2
+        #     self.fps = 1 / 0.002
 
         self.real_fps = 1000 / (self.__real_delta_time + 0.00000001) #self.__cl.get_fps()
         self.__real_delta_time = pygame.time.get_ticks() - self.global_time
         self.global_time = pygame.time.get_ticks()
-        if self.delta_time > 10:
-            print(self.delta_time, self.real_fps)
+        # if self.delta_time > 10:
+        #     print(self.delta_time, self.real_fps)
 
 
 class System:
@@ -221,23 +228,31 @@ class System:
         обработку сообщений окна.
     """
 
-    def __init__(self, window_width : int = 800, window_height: int = 800):
+    def __init__(self, window_width : int = 800, window_height: int = 800) -> None:
         """
         Инициализация всех параметров.
         Аргументы:
             - ширина и высота создаваемого окна:
                 (int) window_width, window_height;
         """
-        self.__units = {} # все юниты
         self.unit_base = UnitBase # глобальные параметры для юнитов
-        self.timer = Timer() # время
-        self.keyboard = Keyboard() # состояние клавиатуры
-        self.mouse = Mouse() # состояние мышки
-        self.wnd_height = window_height
-        self.wnd_width = window_width
+        self.wnd_height = self.unit_base.height = window_height
+        self.wnd_width = self.unit_base.width = window_width
 
+        os.environ['SDL_WINDOWS_DPI_AWARENESS'] = 'permonitorv2'
+        pygame.init()
+        self.screen = pygame.display.set_mode((self.wnd_width, self.wnd_height),
+                                flags= pygame.OPENGL | pygame.DOUBLEBUF, vsync=True)
 
-    def create_unit(self, name: str, unit: object):
+        self.__units = {} # все юниты
+        self.rnd = self.unit_base.rnd = Render()
+        self.timer = self.unit_base.timer = Timer() # время
+        self.keyboard = self.unit_base.keyboard = Keyboard() # состояние клавиатуры
+        self.mouse = self.unit_base.mouse = Mouse() # состояние мышки
+        self.unit_base.camera = self.rnd.camera
+        self.rnd.camera.reshape(window_width, window_height)
+
+    def create_unit(self, name: str, unit: object) -> None:
         """
         Добавление юнита в систему.
         Аргументы:
@@ -252,7 +267,7 @@ class System:
             return
         self.__units[name] = unit
 
-    def __check_rendering_params(self):
+    def __check_rendering_params(self) -> None:
         """
         Функция, отвечающая за параметры отрисовки, которые распространяются на все юниты (пауза, режим расчета fps и тд)
         Аргументы: нет.
@@ -264,42 +279,15 @@ class System:
             if self.keyboard.keys_click['f']:
                 self.timer.is_fps_fixed = not self.timer.is_fps_fixed
             if self.keyboard.keys_click['w']:
-                pass # self.rnd.is_wireframe = not self.rnd.is_wireframe
-
-    def __init(self):
-        """
-        Создание окна и инициализация всех основных систем.
-        Аргументы: нет.
-        Выходные данные: нет.
-        """
-        # init window
-        os.environ['SDL_WINDOWS_DPI_AWARENESS'] = 'permonitorv2'
-        pygame.init()
-
-        # временное тестовое решение
-        self.screen = pygame.display.set_mode((self.wnd_width, self.wnd_height),
-                                flags= pygame.DOUBLEBUF, vsync=True)  # flags= pygame.OPENGL | pygame.DOUBLEBUF
-        # init subs
-        self.unit_base.rnd = None
-        self.unit_base.phys = None
-        self.unit_base.timer = self.timer
-        self.unit_base.keyboard = self.keyboard
-        self.unit_base.mouse = self.mouse
-        self.unit_base.ctx = self.screen  # временное тестовое решение
-        self.unit_base.w = self.wnd_width
-        self.unit_base.h = self.wnd_height
-
-        for uni in self.__units.values():
-            uni.create()
+                self.rnd.is_wireframe = not self.rnd.is_wireframe
 
 
-    def run(self):
+    def run(self) -> None:
         """
         Запуск работы системы (обработка цикла сообщений).
         Аргументы: нет.
         Выходные данные: нет.
         """
-        self.__init()
         while True:
             self.keyboard._check_clicks()
             self.mouse._reset_deltas()
@@ -332,9 +320,8 @@ class System:
                     sys.exit()
 
             if not self.timer.is_pause:
-                #self.rnd.update()
+                self.rnd.update()
                 #self.phys.update()
-                self.unit_base.ctx.fill((0, 0, 0))  # Временное решение. Потом этим будет заниматься рендер.
                 for unit in self.__units.values():
                     unit.update()
                     unit.render()
