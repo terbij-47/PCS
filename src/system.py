@@ -1,5 +1,6 @@
 from units.unit_base import UnitBase
 from src.render.rnd import Render
+from src.physics.phys import Phys
 import pygame
 import os
 import sys
@@ -246,6 +247,7 @@ class System:
 
         self.__units = {} # все юниты
         self.rnd = self.unit_base.rnd = Render()
+        self.phys = self.unit_base.phys = Phys()
         self.timer = self.unit_base.timer = Timer() # время
         self.keyboard = self.unit_base.keyboard = Keyboard() # состояние клавиатуры
         self.mouse = self.unit_base.mouse = Mouse() # состояние мышки
@@ -321,7 +323,7 @@ class System:
 
             if not self.timer.is_pause:
                 self.rnd.update()
-                #self.phys.update()
+                self.phys.update(self.timer.delta_time)
                 for unit in self.__units.values():
                     unit.update()
                     unit.render()

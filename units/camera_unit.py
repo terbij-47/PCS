@@ -10,7 +10,7 @@ class CameraUnit(UnitBase):
         Аргументы: нет.
         Выходные данные: нет.
         """
-        self.camera.set(Vec3(0, 25, 25), Vec3(), Vec3(0, 1, 0))
+        self.camera.set(Vec3(5, 10 / 4, 25 / 8), Vec3(), Vec3(0, 1, 0))
 
         self.camera_speed = 1.2
         self.pos = self.camera.loc.copy()

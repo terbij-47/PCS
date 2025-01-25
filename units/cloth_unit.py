@@ -1,9 +1,6 @@
-import moderngl
 import random
-from src.render.geom import Vertex
 from units.unit_base import *  # должно быть в каждом юните
-import numpy as nmp
-import pygame  # временное решение
+
 
 class ClothUnit(UnitBase):
     """
@@ -17,15 +14,22 @@ class ClothUnit(UnitBase):
         Выходные данные: нет.
         """
         super().__init__()
-        w = h = 50
+        w = h = 30
         self.w = w
         self.h = h
 
+        self.cloth = self.phys.cloth(w, h)
+
         self.g = self.rnd.geom(type='sphere', w=w, h=h)
+
+        self.lgh2 = self.rnd.light(dir=Vec3(1, 3, 1), color=Vec3(0, 0.2, 0.2))
+        self.lgh2.is_active = True
+
         self.shd = self.rnd.shader('cloth', pattern='tex_c')
         self.grid = self.rnd.prim(self.g, shader=self.shd,
                     material= self.rnd.material('cloth mtl', ka=Vec3(.1, .1, .1), kd=Vec3(0.95, 0.95, 0.95),
-                                            ks=Vec3(0.6, 0.6, 0.6), ph = 100))
+                                            ks=Vec3(0.6, 0.6, 0.6), ph = 100, tex2=['wood.png']) )
+
         self.ubo = self.grid.create_ubo(1, 4 * w * h)
 
         self.data = [Vec3() for i in range(w * h)]
@@ -47,10 +51,14 @@ class ClothUnit(UnitBase):
             p = self.grid.geom.vertex_array[i].pos
             self.data[i] = p * (1.5 + math.sin(p.len() * self.timer.time / 200) / 1)
 
-            self.ubo[4 * i] = self.data[i].x
-            self.ubo[4 * i + 1] = self.data[i].y
-            self.ubo[4 * i + 2] = self.data[i].z
+        for x in range(self.w):
+            for y in range(self.h):
+                i = self.w * y + x
+                self.data[i] = self.cloth.grid[x][y].pos * 100
 
+                self.ubo[4 * i] = self.data[i].x
+                self.ubo[4 * i + 1] = self.data[i].y
+                self.ubo[4 * i + 2] = self.data[i].z
 
     def render(self):
         """
@@ -58,7 +66,9 @@ class ClothUnit(UnitBase):
          Аргументы: нет.
          Выходные данные: нет.
          """
+        self.cloth.update(self.timer.delta_time)
         self.grid.render()
+
 
 cloth_unit = ClothUnit()
 

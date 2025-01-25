@@ -53,7 +53,11 @@ void main()
 
   vec4 LightInfluence = vec4(Shade(Pos, Normal), 0);
 
-  OutColor = LightInfluence;
+  OutColor = LightInfluence * 1.0000001 + vec4(Pos.x, -Pos.y / 10, Pos.z, 0) * 0.00001 + vec4(Normal, 0) * 0.0001;
 }
+
+
+
+
 
 

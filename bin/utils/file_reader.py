@@ -28,7 +28,6 @@ class FileReader:
         """
         full_path = self.current_path + file_name
         if not os.path.exists(full_path):
-            print(f'No such file or directory: {full_path}')
             return None
         return full_path
 
@@ -45,12 +44,28 @@ class FileReader:
         """
         full_path = self.check_path(file_name)
         if not full_path:
+            print(f'No such file or directory: {self.current_path + file_name}')
             return None
         with open(full_path) as file:
             content = file.read()
             return content
         print(f'Cannot open "{full_path}" file')
         return None
+
+    def last_update_time(self, file_name : str) -> float | int:
+        """
+        Получение времени последнего обновления файла.
+        Аргументы:
+            - имя файла (без имени директории):
+                (str) file_name;
+        Выходные данные:
+            - (float) время последнего обновления в секундах с начала эпохи;
+            - (-1) если файл не найден;
+        """
+        full_path = self.check_path(file_name)
+        if not full_path:
+            return -1
+        return os.path.getmtime(full_path)
 
     def read_image(self, file_name : str) -> tuple[tuple[int, int], bytes] | tuple[None, None]:
         """

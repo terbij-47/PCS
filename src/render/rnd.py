@@ -182,6 +182,9 @@ class Render:
         Аргументы: нет.
         Выходные данные: нет.
         """
+        for shd in self.__shaders.values():
+            shd.update()
+
         self.__ctx.wireframe = self.is_wireframe
         self.__ctx.clear()
 

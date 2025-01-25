@@ -35,4 +35,7 @@ void main()
 
   CamLoc = cam_loc;
   TexCoord = InTexCoord;
+
+
+
 }
